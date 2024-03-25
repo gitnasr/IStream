@@ -10,7 +10,7 @@ class Backend extends Cookies {
     this.token = this.getByName("token") || ""
     this.device = this.getByName("device") || ""
   }
-  private mainUrl = process.env.NODE_ENV === "development" ? "http://localhost:5000/api" : "https://api.example.com"
+  private mainUrl = process.env.NODE_ENV === "development" ? "http://localhost:5000/api" : "https://s-istream.gitnasr.com/api"
   async get(url: string) {
     const res = await axios.get(`${this.mainUrl}${url}`, {
       headers: {

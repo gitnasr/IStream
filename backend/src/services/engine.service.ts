@@ -50,10 +50,14 @@ export const startByService = async (StartParams: E.InfoResponse, start: Functio
 			},
 			{connection: Redis.client}
 		);
-		await Q.add(taskId, Payload, {jobId: taskId});
+		await Q.add(taskId, Payload, {jobId: taskId, removeOnComplete: true, removeOnFail: false});
 		// Create a New Scrapy
 		const Scrapy = await Queries.createNewScrapy(Payload);
         Users.PushScrapy(Scrapy.user, Scrapy._id);
+		W.on("error", async (err) => {
+			console.log('🚀 ~ startByService ~ err:', err)
+			await Queries.updateStatus(Scrapy._id, Enums.Status.FAILED);
+		})
 		return Scrapy
 	}
 };

@@ -96,12 +96,38 @@ export const metadata: Metadata = {
       url: "/manifest.json",
     },
   ],
+  openGraph: {
+    type: "website",
+    url: "https://istream.gitnasr.com",
+    title: "AEbot - التحميل من أي موقع مشاهدة مره واحدة",
+    description: "أونلاين بوت لتحميل المسلسلات برابط واحد من مواقع المشاهدة العربية زي أكوام وعرب سيد وغيرها",
+    images: [
+      {
+        url: "https://istream.gitnasr.com/og.png",
+        alt: "AEbot",
+      },
+    ],
+  },
+  creator: "Gitnasr",
+  robots: "index, follow",
+  twitter: {
+    images: [
+      {
+        url: "https://istream.gitnasr.com/og.png",
+        alt: "AEbot",
+      },
+    ],
+    card: "summary_large_image",
+    site: "@c0nasr",
+    title: "AEbot - التحميل من أي موقع مشاهدة مره واحدة",
+    description: "أونلاين بوت لتحميل المسلسلات برابط واحد من مواقع المشاهدة العربية زي أكوام وعرب سيد وغيرها",
+  },
 }
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={classNames("flex min-h-screen bg-gray-900", arabic.className)}>
-        <div className="m-auto grid max-w-screen-xl px-4 py-8 text-center lg:py-16 ">
+        <div className="grid max-w-screen-xl px-4 py-8 m-auto text-center lg:py-16 ">
           <Toaster />
           <AuthProvider>
             <HeaderText />
