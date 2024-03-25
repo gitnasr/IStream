@@ -50,6 +50,7 @@ export type User = IUser
 export interface AuthContext {
   isAuthenticated: boolean
   user: User | undefined
+  update: () => void
 }
 export interface Scrapy {
 	title: string;

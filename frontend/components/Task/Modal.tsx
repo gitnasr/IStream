@@ -56,9 +56,9 @@ const ResultModal: React.FC<ResultProps> = ({ innerRef, result, title }) => {
               تحميل بصيعة ADM
             </Button>
           </div>
-          <p className="mt-3 text-xs text-center cursor-pointer">
+          <a className="mt-3 text-xs text-center cursor-pointer hover:underline" href="https://youtu.be/hq6kIyFunTk?t=103" target="_blank">
             لو مش عارف إزاي ممكن تحط اللينكات علي برامج التحميل دوس هنا
-          </p>
+          </a>
         </div>
       </div>
     </Modal>

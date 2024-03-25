@@ -8,7 +8,6 @@ import {Users} from '.';
 import moment from 'moment';
 import {nanoid} from 'nanoid';
 
-const Redis = new RedisService();
 export const getService = (url: string): Enums.Services => {
 	for (const key in Enums.SupportedDomains) {
 		if (url.includes(Enums.SupportedDomains[key as Enums.Services])) {
@@ -19,6 +18,7 @@ export const getService = (url: string): Enums.Services => {
 };
 
 export const startByService = async (StartParams: E.InfoResponse, start: Function) => {
+	const Redis = new RedisService();
 	console.log('🚀 ~ startByService ~ StartParams:', StartParams);
 	const service = getService(StartParams.link!);
 	if (service === Enums.Services.UNKNOWN) {
@@ -48,12 +48,12 @@ export const startByService = async (StartParams: E.InfoResponse, start: Functio
 					throw error;
 				}
 			},
-			{connection: Redis.client}
+			{connection: Redis.client,concurrency: 1,runRetryDelay: 1000,}
 		);
-		await Q.add(taskId, Payload, {jobId: taskId, removeOnComplete: false, removeOnFail: false});
+		await Q.add(taskId, Payload, {jobId: taskId, removeOnComplete: false, removeOnFail: false,attempts:3});
 		// Create a New Scrapy
 		const Scrapy = await Queries.createNewScrapy(Payload);
-        Users.PushScrapy(Scrapy.user, Scrapy._id);
+        await Users.PushScrapy(Scrapy.user, Scrapy._id);
 		W.on("failed", async (err) => {
 			console.log('🚀 ~ startByService ~ err:', err)
 			await Queries.updateStatus(Scrapy._id, Enums.Status.FAILED);

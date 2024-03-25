@@ -103,7 +103,7 @@ export const metadata: Metadata = {
     description: "أونلاين بوت لتحميل المسلسلات برابط واحد من مواقع المشاهدة العربية زي أكوام وعرب سيد وغيرها",
     images: [
       {
-        url: "https://istream.gitnasr.com/og.png",
+        url: "https://istream.gitnasr.com/AEbot.png",
         alt: "AEbot",
       },
     ],
@@ -113,7 +113,7 @@ export const metadata: Metadata = {
   twitter: {
     images: [
       {
-        url: "https://istream.gitnasr.com/og.png",
+        url: "https://istream.gitnasr.com/AEbot.png",
         alt: "AEbot",
       },
     ],

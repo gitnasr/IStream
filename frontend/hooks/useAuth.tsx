@@ -9,6 +9,7 @@ import { createContext } from "react"
 const AuthContext = createContext<AuthContext>({
   isAuthenticated: false,
   user: undefined,
+  update: () => {},
 })
 
 export function useAuth() {
@@ -48,6 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     isAuthenticated,
     user: user,
+    update: auth,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
