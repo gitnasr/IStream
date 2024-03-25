@@ -54,7 +54,7 @@ export const startByService = async (StartParams: E.InfoResponse, start: Functio
 		// Create a New Scrapy
 		const Scrapy = await Queries.createNewScrapy(Payload);
         Users.PushScrapy(Scrapy.user, Scrapy._id);
-		W.on("error", async (err) => {
+		W.on("failed", async (err) => {
 			console.log('🚀 ~ startByService ~ err:', err)
 			await Queries.updateStatus(Scrapy._id, Enums.Status.FAILED);
 		})

@@ -161,7 +161,7 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 		const oneMonth = moment().add(1, 'months')
 		const differenceInMilliseconds = oneMonth.diff(moment());
 	  
-		const differenceInSeconds = differenceInMilliseconds / 1000;
+		const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
 	  
 		await redis.set('captcha_cookie', JSON.stringify(cookies), differenceInSeconds);
 		// 2.5. Parse cookies
