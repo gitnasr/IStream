@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return setIsAuthenticated(true)
       }
     } catch (error) {
+      API.setByName("token", "")
       return setIsAuthenticated(false)
     }
   }, [])

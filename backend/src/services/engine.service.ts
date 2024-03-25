@@ -50,7 +50,7 @@ export const startByService = async (StartParams: E.InfoResponse, start: Functio
 			},
 			{connection: Redis.client}
 		);
-		await Q.add(taskId, Payload, {jobId: taskId, removeOnComplete: true, removeOnFail: false});
+		await Q.add(taskId, Payload, {jobId: taskId, removeOnComplete: false, removeOnFail: false});
 		// Create a New Scrapy
 		const Scrapy = await Queries.createNewScrapy(Payload);
         Users.PushScrapy(Scrapy.user, Scrapy._id);

@@ -126,3 +126,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 backend/.env.prod
+frontend/public/sw.js
+frontend/public/sw.js.map

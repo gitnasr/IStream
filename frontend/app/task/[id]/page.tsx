@@ -1,13 +1,10 @@
 "use client"
 
-import React, { Suspense, useEffect } from "react"
-import { usePathname, useRouter } from "next/navigation"
-
 import { Actions } from "types"
 import Backend from "libs/API"
-import Loading from "./loading"
+import { Loading } from "react-daisyui"
+import React  from "react"
 import { TaskCard } from "components/Task/Card"
-import { useAuth } from "hooks/useAuth"
 import { useQuery } from "@tanstack/react-query"
 
 interface TaskProps {

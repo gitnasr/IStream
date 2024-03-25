@@ -11,7 +11,7 @@ export const Quality: React.FC<IQualityProps> = ({ quality, setQuality, disabled
     <select
       value={quality}
       disabled={disabled}
-      className="p-2 bg-gray-700 rounded-md outline-none md:w-48 ring-indigo-800 focus:ring-2 focus:ring-indigo-600"
+      className="p-4 bg-gray-700 rounded-md outline-none  md:w-48 ring-indigo-800 focus:ring-2 focus:ring-indigo-600"
       onChange={(ChangeEvent) => setQuality(ChangeEvent.target.value)}
     >
       <option value={"1080"}>1080p</option>

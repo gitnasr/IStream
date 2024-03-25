@@ -170,10 +170,12 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 };
 
 const validateCookie = async (test_uri: string, cookies: string) => {
+	console.log("🚀 ~ validateCookie ~ cookies:", cookies)
 	const axios = new Axios();
 	const {data} = await axios.get<string>(test_uri, {headers: {Cookie: cookies}});
 	const dom = new Dommer(data);
 	const title = dom.getTitle();
+	console.log("🚀 ~ validateCookie ~ title:", title)
 	return !title.includes(AKOAM.validation_title);
 };
 

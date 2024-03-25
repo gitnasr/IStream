@@ -21,7 +21,6 @@ export const UCard = () => {
           <Link
             className="inline-block cursor-pointer rounded-full shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] outline-none focus:shadow-[0_0_0_2px_white]"
             href="/history"
-            target="_blank"
             rel="noreferrer noopener"
           >
             <Image
