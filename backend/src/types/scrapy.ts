@@ -14,7 +14,7 @@ export interface IScrapy {
 	quality: Enums.Quality;
 	expiresAt: Date;
 	source: Enums.Sources;
-	result: Schema.Types.ObjectId;
+	result?: Schema.Types.ObjectId;
     logo: string;
     link: string
     episodes_count: number

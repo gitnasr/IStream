@@ -1,6 +1,17 @@
-import { ObjectId } from './utils';
-import {S} from '.';
+import {Enums, S} from '.';
 
-export interface InfoResponse extends Partial<S.IScrapy>  {
+import { ObjectId } from './utils';
+
+export interface Payload {
+    link: string
+    user: ObjectId,
+    source: Enums.Sources
+    quality: Enums.Quality
+}
+export interface InfoResponse extends S.IScrapy  {
     episodes: string[];
 }
+
+export interface StartPayload extends Payload , InfoResponse {}
+
+export type UserPayload = Payload & S.InfoResponse

@@ -10,19 +10,18 @@ export const Start = catchAsync(async (req: Request, res: Response) => {
 	const {link, q, user, source} = req.body;
 	const getService = Engine.getService(link);
 	if (getService === Enums.Services.UNKNOWN) throw new ApiError(400, 'Unknown Service.');
-	let StartParams: E.InfoResponse = {
+	let StartParams: E.Payload = {
 		link,
 		user: user.uId,
 		source,
-		quality: q,
-		episodes: []
+		quality: q
 	};
 	switch (getService) {
 		case Enums.Services.AKOAM:
 			const episode_info = await AkoamService.getInfo(link);
 			if (!episode_info) throw new ApiError(500, 'Failed to get episode info');
-			StartParams = Object.assign(StartParams, episode_info);
-			const scrapy = await Engine.startByService(StartParams, AkoamService.Start);
+			const StartPayload = Object.assign(StartParams, episode_info);
+			const scrapy = await Engine.startByService(StartPayload);
 			return res.status(200).send(scrapy);
 		default:
 			throw new ApiError(400, 'Unknown Service.');
