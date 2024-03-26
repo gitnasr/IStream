@@ -5,9 +5,10 @@ import Axios from './axios';
 import {CaptchaService} from '.';
 import Dommer from '@/utils/cheerio';
 import {Queries} from './queries';
-import { RedisService } from './jobs';
+import { Redis } from 'ioredis';
 import Utils from './utils';
 import moment from 'moment';
+import { vars } from '@/config';
 import {wrapper} from 'axios-cookiejar-support';
 
 export const AKOAM = {
@@ -135,8 +136,9 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 
 	// 2. If it has captcha, solve it
 	if (isCaptcha) {
+		const redis = new Redis(vars.redis.url, {maxRetriesPerRequest: null});
 		// 2.1. Check if stored cookie in Redis
-		const cookie = await RedisService.get('captcha_cookie');
+		const cookie = await redis.get('captcha_cookie');
 		if (cookie) {
 			// 2.2. If found, Parse it
 			const cookiesAsString = Utils.parseCookiesAsString(JSON.parse(cookie));
@@ -146,7 +148,7 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 				return cookiesAsString;
 			} else {
 				// Remove invalid cookie from Redis and continue
-				await RedisService.del('captcha_cookie');
+				await redis.del('captcha_cookie');
 			}
 		}
 		// 2.3. If not, solve captcha
@@ -164,7 +166,7 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 	  
 		const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
 	  
-		await RedisService.set('captcha_cookie', JSON.stringify(cookies),"EX", differenceInSeconds);
+		await redis.set('captcha_cookie', JSON.stringify(cookies),"EX", differenceInSeconds);
 		// 2.5. Parse cookies
 		return Utils.parseCookiesAsString(cookies);
 	}
