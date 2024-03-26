@@ -13,7 +13,11 @@ const envVarsSchema = Joi.object()
 		JWT_AUTH: Joi.string().required().description('JWT secret key'),
 		IP: Joi.string().required().description('IP Info Api Key'),
 		REDIS_URL: Joi.string().required().description('Redis url'),
-		CAPTCHA_2API_KEY: Joi.string().required().description('2Captcha API Key')
+		CAPTCHA_2API_KEY: Joi.string().required().description('2Captcha API Key'),
+		REDIS_PORT: Joi.number().required().description('Redis port'),
+		REDIS_PASSWORD: Joi.string().required().description('Redis password'),
+		REDIS_HOST: Joi.string().required().description('Redis host')
+
 	})
 	.unknown();
 const {value: envVars, error} = envVarsSchema
@@ -44,7 +48,10 @@ const config = {
 	},
 
 	redis: {
-		url: envVars.REDIS_URL
+		url: envVars.REDIS_URL,
+		port: envVars.REDIS_PORT,
+		password: envVars.REDIS_PASSWORD,
+		host: envVars.REDIS_HOST
 	},
 
 	ipinfo: {
