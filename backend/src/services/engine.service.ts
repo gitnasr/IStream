@@ -19,7 +19,6 @@ export const getService = (url: string): Enums.Services => {
 
 export const startByService = async (StartParams: E.InfoResponse, start: Function) => {
 	const Redis = new RedisService();
-	console.log('🚀 ~ startByService ~ StartParams:', StartParams);
 	const service = getService(StartParams.link!);
 	if (service === Enums.Services.UNKNOWN) {
 		throw new ApiError(400, 'Unknown Service.');
@@ -38,26 +37,23 @@ export const startByService = async (StartParams: E.InfoResponse, start: Functio
 		const W = new Worker(
 			service,
 			async (job: Job) => {
+				const {data} = job;
+
 				try {
-					const {data} = job;
-					console.log('🚀 ~ startByService ~ data:', data);
 					const res = await start(data.operationId, data.episodes, data.quality);
 					return res;
 				} catch (error) {
-					console.log('🚀 ~ startByService ~ error:', error);
+					await Queries.updateStatus(data.operationId, Enums.Status.FAILED);
 					throw error;
 				}
 			},
-			{connection: Redis.client,concurrency: 1,runRetryDelay: 1000,}
+			{connection: Redis.client, concurrency: 1, runRetryDelay: 1000}
 		);
-		await Q.add(taskId, Payload, {jobId: taskId, removeOnComplete: false, removeOnFail: false,attempts:3});
+		await Q.add(taskId, Payload, {jobId: taskId, removeOnComplete: false, removeOnFail: false, attempts: 3});
 		// Create a New Scrapy
 		const Scrapy = await Queries.createNewScrapy(Payload);
-        await Users.PushScrapy(Scrapy.user, Scrapy._id);
-		W.on("failed", async (err) => {
-			console.log('🚀 ~ startByService ~ err:', err)
-			await Queries.updateStatus(Scrapy._id, Enums.Status.FAILED);
-		})
-		return Scrapy
+		await Users.PushScrapy(Scrapy.user, Scrapy._id);
+
+		return Scrapy;
 	}
 };
