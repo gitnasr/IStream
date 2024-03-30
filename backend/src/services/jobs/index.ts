@@ -1,7 +1,7 @@
 import {Queue, Worker} from 'bullmq';
 
 import JobHandlers from './handlers';
-import Redis from 'ioredis';
+import {Redis} from 'ioredis';
 import moment from 'moment';
 import {vars} from '@/config';
 
@@ -27,5 +27,5 @@ const AkoamW = new Worker('AKOAM', JobHandlers.Akoam, {
 		count: 4
 	}
 });
-
-export {AkoamQ, AkoamW, RedisService};
+export default RedisService
+export {AkoamQ, AkoamW, };
