@@ -27,5 +27,4 @@ const AkoamW = new Worker('AKOAM', JobHandlers.Akoam, {
 		count: 4
 	}
 });
-export default RedisService
-export {AkoamQ, AkoamW, };
+export {AkoamQ, AkoamW, RedisService};
