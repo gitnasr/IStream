@@ -5,9 +5,9 @@ import { Redis } from 'ioredis'
 import moment from 'moment';
 import {vars} from '@/config';
 
-const RedisService = new Redis(vars.redis.url);
+const RedisService = new Redis(vars.redis.url, {maxRetriesPerRequest: null});
 
-const AkoamQ = new Queue('AKOAM', {connection: RedisService});
+const AkoamQ = new Queue('AKOAM', {connection: RedisService, });
 const AkoamW = new Worker('AKOAM', JobHandlers.Akoam, {
 	connection: RedisService,
 	concurrency: 5,
