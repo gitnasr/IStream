@@ -44,7 +44,9 @@ const config = {
 	},
 
 	redis: {
-		url: envVars.REDIS_URL
+		url: envVars.REDIS_URL,
+		token: envVars.REDIS_TOKEN,
+		uri: envVars.REDIS_URI
 	},
 
 	ipinfo: {
