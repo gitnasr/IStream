@@ -1,7 +1,7 @@
 import {Queue, Worker} from 'bullmq';
 
 import JobHandlers from './handlers';
-import {Redis} from 'ioredis';
+import Redis from 'ioredis';
 import moment from 'moment';
 import {vars} from '@/config';
 
