@@ -19,6 +19,12 @@ class RedisService {
     async setEx(key: string, value: string, time: number) {
         return this.client.setex(key, time, value);
     }
+    async setList(key: string, value: string) {
+        return this.client.lpush(key, value);
+    }
+    async getListLength(key: string) {
+        return this.client.llen(key);
+    }
 }
 
 export default new RedisService;

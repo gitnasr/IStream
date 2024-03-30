@@ -15,7 +15,13 @@ export const getService = (url: string): Enums.Services => {
 	}
 	return Enums.Services.UNKNOWN;
 };
-
+/**
+ * Starts a scraping task based on the provided user payload.
+ * 
+ * @param {E.UserPayload} userPayload - The payload containing the necessary information for the scraping task.
+ * @returns {Promise<S.IScrapyDocument>} - The created Scrapy document.
+ * @throws {ApiError} - If the service is unknown.
+ */
 export const startByService = async (userPayload: E.UserPayload) => {
 	const service = getService(userPayload.link);
 	if (service === Enums.Services.UNKNOWN) {

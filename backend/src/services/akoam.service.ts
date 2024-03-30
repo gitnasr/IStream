@@ -1,8 +1,8 @@
+import {CaptchaService, Logs} from '.';
 import {Cookie, CookieJar} from 'tough-cookie';
 import {Enums, R, S} from '@/types';
 
 import Axios from './axios';
-import {CaptchaService} from '.';
 import Dommer from '@/utils/cheerio';
 import {Queries} from './queries';
 import RedisService from './redis';
@@ -42,7 +42,8 @@ export const Start = async (jobId: string, episodes: string[], quality = '1080')
 	if (episodes.length === 0) {
 		await Queries.updateJobProgress(jobId, 100, 'No Episodes Found');
 		await Queries.updateStatus(jobId, Enums.Status.FAILED);
-		throw new Error('No Episodes Found');
+		await Logs.registerError(new Error('No Episodes Found'), jobId);
+		return;
 	}
 	const startedAt = moment();
 	await Queries.updateStatus(jobId, Enums.Status.PROCESSING);
@@ -51,7 +52,10 @@ export const Start = async (jobId: string, episodes: string[], quality = '1080')
 	const protected_links = await getProtectedCaptchaLinks(short_links);
 	const cookies = await captchaHandler(protected_links[0]);
 	if (!cookies) {
-		return await Queries.updateJobProgress(jobId, 100, 'Failed to Solve Captcha.');
+		await Queries.updateJobProgress(jobId, 100, 'Failed to Solve Captcha.');
+		await Queries.updateStatus(jobId, Enums.Status.FAILED);
+		await Logs.registerError(new Error('Failed to Solve Captcha'), jobId);
+		return;
 	}
 	const download_links = await getDownloadLinks(protected_links, cookies, quality);
 	const timeTaken = moment().diff(startedAt, 'milliseconds');
@@ -59,7 +63,8 @@ export const Start = async (jobId: string, episodes: string[], quality = '1080')
 	if (download_links.length === 0) {
 		await Queries.updateJobProgress(jobId, 100, 'No Download Links Found');
 		await Queries.updateStatus(jobId, Enums.Status.FAILED);
-		throw new Error('No Download Links Found');
+		await Logs.registerError(new Error('No Download Links'), jobId);
+		return;
 	}
 	await Queries.updateJobProgress(jobId, 0, 'Getting Estimated Size');
 	const {bytes, BytesAsText} = await Utils.getSize(download_links);
@@ -77,7 +82,7 @@ export const Start = async (jobId: string, episodes: string[], quality = '1080')
 	const result = await Queries.createResult(Payload);
 	await Queries.updateScrapyById(jobId, {result: result._id, progress: 100, progressMessage: 'Done'});
 
-    return result;
+	return result;
 };
 
 const getShortLinks = async (uris: string[]) => {
@@ -135,7 +140,6 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 
 	// 2. If it has captcha, solve it
 	if (isCaptcha) {
-		
 		// 2.1. Check if stored cookie in Redis
 		const cookie = await RedisService.get('captcha_cookie');
 		if (cookie) {
@@ -160,11 +164,11 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 		const cookies = await useVerify(response.data);
 		if (!cookies) throw new Error('No Cookies Found! ');
 		// 2.4. Store cookie in Redis
-		const oneMonth = moment().add(1, 'months')
+		const oneMonth = moment().add(1, 'months');
 		const differenceInMilliseconds = oneMonth.diff(moment());
-	  
+
 		const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
-	  
+
 		await RedisService.setEx('captcha_cookie', JSON.stringify(cookies), differenceInSeconds);
 		// 2.5. Parse cookies
 		return Utils.parseCookiesAsString(cookies);
@@ -172,12 +176,10 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 };
 
 const validateCookie = async (test_uri: string, cookies: string) => {
-	console.log("🚀 ~ validateCookie ~ cookies:", cookies)
 	const axios = new Axios();
 	const {data} = await axios.get<string>(test_uri, {headers: {Cookie: cookies}});
 	const dom = new Dommer(data);
 	const title = dom.getTitle();
-	console.log("🚀 ~ validateCookie ~ title:", title)
 	return !title.includes(AKOAM.validation_title);
 };
 

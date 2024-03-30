@@ -1,5 +1,5 @@
 import express, {Express} from 'express';
-import {handlers, vars} from './config';
+import {handlers, logger, vars} from './config';
 import ipinfo, {originatingIPSelector} from 'ipinfo-express';
 
 import {ApiError} from '@/middlewares/errors';
@@ -43,13 +43,13 @@ app.use(Errors.errorConverter);
 app.use(Errors.errorHandler);
 
 app.listen(vars.port, () => {
-	console.log(`Server is running on port ${process.env.PORT}`);
+	logger.info(`Server is running on port ${process.env.PORT}`);
 });
 
 mongoose
 	.connect(vars.mongoose.url)
 	.then(async () => {
-		console.log('Connected to MongoDB');
+		logger.info('Connected to MongoDB');
 	})
 	.catch(err => {
 		console.error('Error connecting to MongoDB: ', err);
