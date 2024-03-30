@@ -8,7 +8,6 @@ import {Queries} from './queries';
 import RedisService from './redis';
 import Utils from './utils';
 import moment from 'moment';
-import { vars } from '@/config';
 import {wrapper} from 'axios-cookiejar-support';
 
 export const AKOAM = {
@@ -166,7 +165,7 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 	  
 		const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
 	  
-		await RedisService.set('captcha_cookie', JSON.stringify(cookies), "EX", differenceInSeconds);
+		await RedisService.setEx('captcha_cookie', JSON.stringify(cookies), differenceInSeconds);
 		// 2.5. Parse cookies
 		return Utils.parseCookiesAsString(cookies);
 	}
