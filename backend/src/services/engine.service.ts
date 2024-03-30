@@ -23,7 +23,7 @@ export const startByService = async (userPayload: E.UserPayload) => {
 	}
 
 	const taskId = nanoid(10);
-	let Payload:E.StartPayload = {
+	let Payload: E.StartPayload = {
 		...userPayload,
 		service,
 		operationId: taskId,
@@ -34,10 +34,10 @@ export const startByService = async (userPayload: E.UserPayload) => {
 	};
 	if (service === Enums.Services.AKOAM) {
 		await schedule.StartByAkoam(Payload, taskId);
-		// Create a New Scrapy
-		const Scrapy = await Queries.createNewScrapy(Payload);
-		await Users.PushScrapy(Scrapy.user, Scrapy._id);
-
-		return Scrapy;
 	}
+	// Create a New Scrapy
+	const Scrapy = await Queries.createNewScrapy(Payload);
+	await Users.PushScrapy(Scrapy.user, Scrapy._id);
+
+	return Scrapy;
 };

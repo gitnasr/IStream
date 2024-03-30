@@ -2,7 +2,7 @@ import express, {Express} from 'express';
 import {handlers, vars} from './config';
 import ipinfo, {originatingIPSelector} from 'ipinfo-express';
 
-import { ApiError } from '@/middlewares/errors';
+import {ApiError} from '@/middlewares/errors';
 import {Errors} from '@/middlewares';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
 import compression from 'compression';
@@ -16,7 +16,6 @@ const app: Express = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json({limit: '50mb'}));
-
 
 app.use(ExpressMongoSanitize());
 app.use(compression());
@@ -33,11 +32,9 @@ app.use(handlers.successHandler);
 app.use(handlers.errorHandler);
 app.use('/api', router);
 
-
 app.use((req, res, next) => {
 	next(new ApiError(404, 'Not found'));
 });
-
 
 // convert error to ApiError, if needed
 app.use(Errors.errorConverter);
@@ -51,7 +48,7 @@ app.listen(vars.port, () => {
 
 mongoose
 	.connect(vars.mongoose.url)
-	.then(() => {
+	.then(async () => {
 		console.log('Connected to MongoDB');
 	})
 	.catch(err => {
