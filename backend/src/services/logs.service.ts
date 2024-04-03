@@ -31,3 +31,13 @@ const sendNotification = async (message: string) => {
 		body: message
 	});
 };
+
+
+export const registerLog = async (message: string, type: 'info' | 'error' = 'info') => {
+	await Logs.create({
+		message,
+		type,
+		timestamp: new Date()
+	});
+
+}

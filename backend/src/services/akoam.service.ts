@@ -50,12 +50,15 @@ export const Start = async (jobId: string, episodes: string[], quality = '1080')
 
 	const short_links = await getShortLinks(episodes);
 	const protected_links = await getProtectedCaptchaLinks(short_links);
-	const cookies = await captchaHandler(protected_links[0]);
-	if (!cookies) {
+	const {cookies,isCaptcha} = await captchaHandler(protected_links[0]);
+	if (isCaptcha && !cookies) {
 		await Queries.updateJobProgress(jobId, 100, 'Failed to Solve Captcha.');
 		await Queries.updateStatus(jobId, Enums.Status.FAILED);
 		await Logs.registerError(new Error('Failed to Solve Captcha'), jobId);
 		return;
+	}
+	if (!isCaptcha){
+		await Logs.registerLog('No Captcha Found', 'info')
 	}
 	const download_links = await getDownloadLinks(protected_links, cookies, quality);
 	const timeTaken = moment().diff(startedAt, 'milliseconds');
@@ -122,7 +125,7 @@ const getProtectedCaptchaLinks = async (shortLinks: string[]) => {
 	return protected_links;
 };
 
-const captchaHandler = async (uri: string): Promise<string | undefined> => {
+const captchaHandler = async (uri: string): Promise<{isCaptcha:boolean, cookies:string}> => {
 	const axios = new Axios();
 	let isCaptcha = true;
 	// 1. Check if page has captcha -hope that they removed it any time-
@@ -148,7 +151,10 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 			// 2.3. Validate cookie
 			const isValid = await validateCookie(uri, cookiesAsString);
 			if (isValid) {
-				return cookiesAsString;
+				return {
+					isCaptcha: true,
+					cookies: cookiesAsString
+				}
 			} else {
 				// Remove invalid cookie from Redis and continue
 				await RedisService.del('captcha_cookie');
@@ -171,7 +177,16 @@ const captchaHandler = async (uri: string): Promise<string | undefined> => {
 
 		await RedisService.setEx('captcha_cookie', JSON.stringify(cookies), differenceInSeconds);
 		// 2.5. Parse cookies
-		return Utils.parseCookiesAsString(cookies);
+		return {
+			isCaptcha: true,
+			cookies: Utils.parseCookiesAsString(cookies)
+		}
+	}else{
+		return {
+			isCaptcha: false,
+			cookies: ''
+		
+		}
 	}
 };
 
