@@ -7,6 +7,7 @@ import { Quality } from "./Quality"
 import StartButton from "./Button"
 import { arabic } from "app/fonts"
 import classNames from "classnames"
+import toast from "react-hot-toast"
 import useAutoParse from "hooks/useAutoParse"
 import { useRouter } from "next/navigation"
 
@@ -16,11 +17,18 @@ const URLInput: React.FC = () => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const Start = async () => {
-    setLoading(true)
-    const API = new Backend()
-    const Scrapy = await API.post("/engine/start", { link: value, q, source: "BY_WEBSITE" }, true)
-    router.push(`/task/${Scrapy.operationId}`)
-    setLoading(false)
+    try {
+      setLoading(true)
+      const API = new Backend()
+      const Scrapy = await API.post("/engine/start", { link: value, q, source: "BY_WEBSITE" }, true)
+    await  router.push(`/task/${Scrapy.operationId}`)
+      
+    } catch (error) {
+      toast.error("انت مدخل لينك فيلم او حلقة، البوت مخصص للمسلسلات حط لينك المسلسل")
+    }finally{
+      setLoading(false)
+    }
+  
   }
   return (
     <div className="flex flex-col gap-3 md:flex-row-reverse">
