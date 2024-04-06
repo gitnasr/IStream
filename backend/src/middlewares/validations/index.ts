@@ -13,11 +13,10 @@ const Track = {
 	query: {
 		id: Joi.string().required().label('ID').min(4).max(24)
 	}
-};
-
+}
 const Start = {
 	body: Joi.object({
-		link: Joi.string().required().trim().uri().message('اللينك ده مش لينك اكوام الجديد').label('اللينك'),
+		link: Joi.string().required().trim().uri().label('اللينك').regex(/^(?!.*(?:episode|movie)).*$/),
 		q: Joi.string()
 			.required()
 			.equal(...Object.values(Enums.Quality))
