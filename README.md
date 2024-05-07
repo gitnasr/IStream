@@ -22,14 +22,17 @@ AEBot is an Online Scraping Tool created with Node.js, designed to streamline th
 ## Challenges Faced
 
 - **Handling Asynchronous Scraping:**
-  - Node.js being single-threaded posed a challenge in waiting for responses from the algorithm. To overcome this, the job scheduling library Agenda JS was employed. Users receive a unique ID to track and follow up on the job status.
+  - Node.js being single-threaded posed a challenge in waiting for responses from the algorithm. To overcome this, the job scheduling library BullMQ was employed. Users receive a unique ID to track and follow up on the job status.
 
 ## Note
 
-Please note that AEBot is currently not maintained due to the unavailability of the targeted websites (Akoam and Arabseed). The tool will be updated as soon as these websites come back online.
+Please note that AEBot needs to be maintained due to the unavailability of the targeted websites (Akoam and Arabseed). The tool will be updated as soon as these websites come back online.
 
 
 ## Disclaimer
 
-AEBot is a tool created for the purpose of scraping information from Akoam and Arabseed websites. The developer does not own or endorse any of the movies or series offered by these websites. AEBot is intended solely as a tool to facilitate the extraction of links from these specific platforms.
+AEBot is a tool that was created to scrape information from Akoam and Arabseed websites. The developer does not own or endorse any of these websites' movies or series. AEBot is intended solely as a tool to facilitate the extraction of links from these specific platforms.
 
+## Repo
+
+If you came through the main domain, you can access the <a href="https://github.com/gitnasr/IStream"/>repo</a> from here.
